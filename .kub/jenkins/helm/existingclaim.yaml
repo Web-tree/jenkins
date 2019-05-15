@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-volume
+  namespace: infrastructure
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: do-block-storage
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: dobs.csi.digitalocean.com
+  finalizers:
+    - kubernetes.io/pv-protection
+    - external-attacher/dobs-csi-digitalocean-com
+  name: pvc-8a73bc27-4bff-11e9-a8a2-9a2408b5ab03
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: jenkins-volume
+    namespace: infrastructure
+  csi:
+    driver: dobs.csi.digitalocean.com
+    fsType: ext4
+    volumeAttributes:
+      com.digitalocean.csi/noformat: "true"
+    volumeHandle: d3475410-4bff-11e9-aab5-0a58ac1480f1
+  storageClassName: do-block-storage
+  volumeMode: Filesystem
