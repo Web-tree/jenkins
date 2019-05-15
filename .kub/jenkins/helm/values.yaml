@@ -1,7 +1,7 @@
-Master:
-  Image: jenkinsci/blueocean
-  ImageTag: latest
-  InstallPlugins:
+master:
+  image: jenkinsci/blueocean
+  imageTag: latest
+  installPlugins:
     - kubernetes
     - workflow-job
     - workflow-aggregator
@@ -10,32 +10,43 @@ Master:
     - backup
     - slack
     - artifactory
-  JavaOpts: "-Xms1000m -Xmx1000m"
-  ServiceType: ClusterIP
+    - google-login
+    - jobConfigHistory
+    - http_request
+  javaOpts: "-Xms150m -Xmx300m -Dkubernetes.websocket.ping.interval=30"
+  serviceType: ClusterIP
   ingress:
     enabled: true
     hostName: jenkins.dev.webtree.org
     path: /
-  Tolerations: {}
-  resources:
-    request:
-      cpu: "0"
-  NodeSelector:
-    wt-type: backend
-Agent:
-  Enabled: true
+  tolerations: {}
   resources:
     request:
       cpu: "10m"
     limits:
-      cpu: "50m"
-      memory: "512Mi"
-  NodeSelector:
-    wt-type: backend
-Persistence:
-  Size: 5Gi
-NetworkPolicy:
-  ApiVersion: networking.k8s.io/v1
+      cpu: "500m"
+  nodeSelector:
+    "node-role.kubernetes.io/type": backend
+  healthProbesLivenessTimeout: 240
+  healthProbesReadinessTimeout: 120
+agent:
+  enabled: true
+  resources:
+    request:
+      cpu: "100m"
+    limits:
+      cpu: "200m"
+      memory: "300Mi"
+  nodeSelector:
+    "node-role.kubernetes.io/type": backend
+persistence:
+  enable: true
+  existingClaim: jenkins-volume
+  size: 5Gi
+networkPolicy:
+  apiVersion: networking.k8s.io/v1
 rbac:
-  install: true
-  serviceAccountName: cd-jenkins
+  create: true
+serviceAccount:
+  name: jenkins-cd
+  create: true
