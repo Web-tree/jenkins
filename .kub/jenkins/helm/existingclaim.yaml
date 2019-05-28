@@ -19,7 +19,7 @@ metadata:
   finalizers:
     - kubernetes.io/pv-protection
     - external-attacher/dobs-csi-digitalocean-com
-  name: pvc-8a73bc27-4bff-11e9-a8a2-9a2408b5ab03
+  name: jenkins
 spec:
   accessModes:
     - ReadWriteOnce
@@ -35,6 +35,6 @@ spec:
     fsType: ext4
     volumeAttributes:
       com.digitalocean.csi/noformat: "true"
-    volumeHandle: d3475410-4bff-11e9-aab5-0a58ac1480f1
+    volumeHandle: bb9bc770-809d-11e9-b9db-0a58ac14d074
   storageClassName: do-block-storage
   volumeMode: Filesystem
